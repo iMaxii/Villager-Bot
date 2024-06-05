@@ -6,10 +6,11 @@ from urllib.parse import quote as urlquote
 
 import discord
 from discord.ext import commands
+from discord import app_commands
 
 from bot.cogs.core.database import Database
 from bot.models.translation import Fun_Trivia_Question
-from bot.utils.ctx import Ctx
+from bot.utils.ctx import Ctx, Int
 from bot.utils.misc import clean_text, shorten_text
 from bot.villager_bot import VillagerBotCluster
 
@@ -274,9 +275,9 @@ class Fun(commands.Cog):
             random.choice(self.d.kills).format(shorten_text(thing, 500), ctx.author.mention),
         )
 
-    @commands.command(name="coinflip", aliases=["flipcoin", "cf"])
-    async def coin_flip(self, ctx: Ctx):
-        await ctx.send_embed(random.choice(("heads", "tails")))
+    @app_commands.command(name="coinflip")
+    async def coin_flip(self, interaction: Int):
+        await interaction.send_embed(random.choice(("heads", "tails")))
 
     @commands.command(name="pat")
     @commands.guild_only()

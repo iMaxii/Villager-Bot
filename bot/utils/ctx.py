@@ -1,5 +1,6 @@
 import discord
 from discord.ext.commands import Context
+from discord import Interaction
 
 from bot.models.translation import Translation
 
@@ -36,4 +37,24 @@ class CustomContext(Context):
         return f"Ctx({guild_id=}, {author_id=})"
 
 
+class CustomInteraction(Interaction):
+    embed_color: discord.Color
+    l: Translation
+    failure_reason: str | None
+    custom_error: Exception | None
+
+    def __init__(self, *args, embed_color: discord.Color = None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.embed_color = embed_color
+
+    async def send_embed(self, message: str, *, ignore_exceptions: bool = False) -> None:
+        await self.bot.send_embed(self, message, ignore_exceptions=ignore_exceptions)
+
+    def __repr__(self) -> str:
+        guild_id = getattr(self.guild, "id", None)
+        user_id = getattr(self.user, "id", None)
+        return f"Interaction({guild_id=}, {user_id=})"
+
+
 Ctx = CustomContext
+Int = CustomInteraction
